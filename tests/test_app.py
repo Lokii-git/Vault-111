@@ -1,4 +1,5 @@
 import os
+import importlib
 import tempfile
 
 import pytest
@@ -111,3 +112,20 @@ def test_list_empty(client, tmp_path, monkeypatch):
     resp = client.get("/list")
     assert resp.status_code == 200
     assert b"No ideas" in resp.data
+
+
+# ---------------------------------------------------------------------------
+# VAULT_PROJECTS_DIR env var
+# ---------------------------------------------------------------------------
+
+def test_projects_dir_respects_env_var(tmp_path, monkeypatch):
+    """VAULT_PROJECTS_DIR env var overrides the built-in default."""
+    monkeypatch.setenv("VAULT_PROJECTS_DIR", str(tmp_path))
+    import app as app_module
+    importlib.reload(app_module)
+    try:
+        assert app_module.PROJECTS_DIR == str(tmp_path)
+    finally:
+        # Always restore the module to its original state so other tests are unaffected.
+        monkeypatch.delenv("VAULT_PROJECTS_DIR", raising=False)
+        importlib.reload(app_module)

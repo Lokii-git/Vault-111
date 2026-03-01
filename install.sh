@@ -71,6 +71,8 @@ After=network.target
 Type=simple
 User=$SERVICE_USER
 WorkingDirectory=$INSTALL_DIR
+# Change VAULT_PROJECTS_DIR to store idea files somewhere else (e.g. a mounted drive).
+Environment=VAULT_PROJECTS_DIR=$INSTALL_DIR/projects
 ExecStart=$INSTALL_DIR/.venv/bin/gunicorn -c $INSTALL_DIR/gunicorn.conf.py app:app
 Restart=on-failure
 RestartSec=5

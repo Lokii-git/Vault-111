@@ -67,6 +67,28 @@ Vault-111/
     └── test_app.py     # pytest test suite
 ```
 
+## Configuration
+
+| Environment variable | Default | Description |
+|---|---|---|
+| `VAULT_PROJECTS_DIR` | `<app-dir>/projects` | Absolute path to the directory where `.md` idea files are stored. |
+
+Set it before starting the app:
+
+```bash
+# manual / dev
+export VAULT_PROJECTS_DIR=/mnt/data/vault-ideas
+gunicorn -c gunicorn.conf.py app:app
+```
+
+When using the systemd service (installed by `install.sh`), edit the `Environment=` line in the unit file and reload:
+
+```bash
+sudo systemctl edit --full vault-111   # find and update VAULT_PROJECTS_DIR=
+sudo systemctl daemon-reload
+sudo systemctl restart vault-111
+```
+
 ## Running tests
 
 ```bash
