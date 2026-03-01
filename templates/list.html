@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAULT 111 — Saved Ideas</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0f0a;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 2rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 540px;
+      border-bottom: 1px solid #1a6e1a;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 8px #33ff33;
+    }
+
+    header h1 span { color: #66ff66; }
+
+    header p {
+      font-size: 0.8rem;
+      color: #1a8c1a;
+      margin-top: 0.2rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 540px;
+    }
+
+    h2 {
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      color: #1aff1a;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      border: 1px solid #1a6e1a;
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .fname {
+      font-size: 1rem;
+      word-break: break-all;
+    }
+
+    .fmeta {
+      font-size: 0.75rem;
+      color: #1a8c1a;
+      white-space: nowrap;
+    }
+
+    .empty {
+      color: #1a6e1a;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    nav {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #1a6e1a;
+    }
+
+    nav a { color: #1aff1a; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>&gt;</span> VAULT 111</h1>
+    <p>Secure Idea Storage</p>
+  </header>
+
+  <div class="container">
+    <h2>SAVED IDEAS</h2>
+
+    {% if files %}
+      <ul>
+        {% for f in files %}
+          <li>
+            <span class="fname">{{ f.name | e }}</span>
+            <span class="fmeta">{{ f.modified | e }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty">No ideas saved yet. Go capture something!</p>
+    {% endif %}
+  </div>
+
+  <nav>
+    <a href="/">↳ Back to Vault</a>
+  </nav>
+</body>
+</html>
