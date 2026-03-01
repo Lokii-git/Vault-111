@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAULT 111 — Secure Idea Storage</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0f0a;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 2rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 540px;
+      border-bottom: 1px solid #1a6e1a;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 8px #33ff33;
+    }
+
+    header h1 span { color: #66ff66; }
+
+    header p {
+      font-size: 0.8rem;
+      color: #1a8c1a;
+      margin-top: 0.2rem;
+    }
+
+    form {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #1aff1a;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      background: #050d05;
+      border: 1px solid #1a6e1a;
+      color: #33ff33;
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.75rem;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #33ff33;
+      box-shadow: 0 0 6px #33ff3340;
+    }
+
+    textarea {
+      min-height: 200px;
+      resize: vertical;
+    }
+
+    button[type="submit"] {
+      background: #0d3d0d;
+      border: 2px solid #33ff33;
+      color: #33ff33;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      padding: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      text-shadow: 0 0 6px #33ff33;
+      -webkit-appearance: none;
+    }
+
+    button[type="submit"]:active {
+      background: #1a6e1a;
+      box-shadow: 0 0 12px #33ff3380;
+    }
+
+    #status {
+      min-height: 1.4rem;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    #status.success { color: #33ff33; }
+    #status.error   { color: #ff4444; }
+
+    nav {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #1a6e1a;
+    }
+
+    nav a { color: #1aff1a; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+
+    ::placeholder { color: #1a6e1a; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>&gt;</span> VAULT 111</h1>
+    <p>Secure Idea Storage</p>
+  </header>
+
+  <form id="vault-form">
+    <div>
+      <label for="name">PROJECT NAME</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="my-awesome-idea"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        maxlength="64"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="content">NOTES / SPEC</label>
+      <textarea
+        id="content"
+        name="content"
+        placeholder="# My Idea&#10;&#10;Describe it here..."
+        spellcheck="true"
+      ></textarea>
+    </div>
+
+    <p id="status" aria-live="polite"></p>
+
+    <button type="submit">[ SUBMIT TO VAULT ]</button>
+  </form>
+
+  <nav>
+    <a href="/list">↳ View saved ideas</a>
+  </nav>
+
+  <script>
+    const form = document.getElementById('vault-form');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+      status.className = '';
+
+      const data = new FormData(form);
+
+      try {
+        const res = await fetch('/save', { method: 'POST', body: data });
+        const json = await res.json();
+
+        if (res.ok) {
+          status.textContent = '✔ ' + json.message;
+          status.className = 'success';
+          form.reset();
+        } else {
+          status.textContent = '✘ ' + json.error;
+          status.className = 'error';
+        }
+      } catch (err) {
+        status.textContent = '✘ Network error. Please try again.';
+        status.className = 'error';
+      }
+    });
+  </script>
+</body>
+</html>
