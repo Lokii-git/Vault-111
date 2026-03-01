@@ -6,7 +6,10 @@ from flask import Flask, abort, jsonify, render_template, request
 
 app = Flask(__name__)
 
-PROJECTS_DIR = os.path.join(os.path.dirname(__file__), "projects")
+PROJECTS_DIR = os.environ.get(
+    "VAULT_PROJECTS_DIR",
+    os.path.join(os.path.dirname(__file__), "projects"),
+)
 MAX_CONTENT_BYTES = 100 * 1024  # 100KB
 MAX_NAME_LENGTH = 64
 VALID_NAME_RE = re.compile(r"^[a-z0-9_-]+$")
